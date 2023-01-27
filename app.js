@@ -110,22 +110,14 @@ const agregarAlCarrito = (index) => {
     // SI ENCUENTRA ALGO LO GUARDA EN indiceEncontradoCarrito Y SINO DEVUELVE -1
   });
   if (indiceEncontradoCarrito === -1) {
-    Swal.fire(
-      'Producto agregado al carrito',
-      '',
-      'success'
-    )
+    Swal.fire("Producto agregado al carrito", "", "success");
     // SI NO ENCUENTRA EL INDICE LO CREA
     const agregarProducto = productos[index];
     agregarProducto.cantidad = 1;
     cart.push(agregarProducto);
     dibujarCarrito();
   } else {
-    Swal.fire(
-      'Producto agregado al carrito',
-      '',
-      'success'
-    )
+    Swal.fire("Producto agregado al carrito", "", "success");
     //SI ENCUENTRA EL INDICE, LE AGREGA UNO
     cart[indiceEncontradoCarrito].cantidad += 1;
     dibujarCarrito();
@@ -149,9 +141,13 @@ const dibujarCarrito = () => {
         <img class="cart-img" src="${producto.img}" alt="Card image cap">
         <div class="producto-details">${producto.nombre}</div>
         <div class="producto-detail">
-          <button onClick="restarItem(${producto.id})" class="btn btn-secondary"><i class="fa-solid fa-minus"></i></button>
+          <button onClick="restarItem(${
+            producto.id
+          })" class="btn btn-secondary"><i class="fa-solid fa-minus"></i></button>
           <span id='cantidad'>${producto.cantidad}</span>
-          <button onClick="sumarItem(${producto.id})" class="btn btn-success"><i class="fa-solid fa-plus"></i></button></div>
+          <button onClick="sumarItem(${
+            producto.id
+          })" class="btn btn-success"><i class="fa-solid fa-plus"></i></button></div>
           <div class="producto-detailt"> Precio: $ ${producto.precio}</div>
           <div class="producto-detail"> Subtotal: $ ${
             producto.precio * producto.cantidad
@@ -172,43 +168,61 @@ const dibujarCarrito = () => {
   }
 };
 
-
 const eliminarProducto = (index) => {
   Swal.fire({
-    title: '¿Estás segurx que desea eliminar el producto?',
+    title: "¿Estás segurx que desea eliminar el producto?",
     text: "Luego podrá volverlo a agregar nuevamente",
-    icon: 'warning',
+    icon: "warning",
     showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Sí, estoy segurx.'
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Sí, estoy segurx.",
   }).then((result) => {
     if (result.isConfirmed) {
-      cart.splice(index, 1);  //removeme de la posición index, 1 elemento
+      cart.splice(index, 1); //removeme de la posición index, 1 elemento
       dibujarCarrito();
-      Swal.fire(
-        'Deleted!',
-        'Your file has been deleted.',
-        'success'
-      )
+      Swal.fire("Deleted!", "Your file has been deleted.", "success");
     }
-  })
-
+  });
 };
-
 
 const finalizarCompra = () => {
   Swal.fire({
-title: '¿Desea seguir comprando o ir a pagar?',
-icon: 'warning',
-showCancelButton: true,
-confirmButtonColor: '#3085d6',
-cancelButtonColor: '#d33',
-confirmButtonText: 'Ir a pagar',
-cancelButtonText: 'Seguir Comprando'
-}).then((result) => {
-if (result.isConfirmed) {
-  cargarFormulario();
-}
-})
+    title: "¿Desea seguir comprando o ir a pagar?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Ir a pagar",
+    cancelButtonText: "Seguir Comprando",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      cargarFormulario();
+    }
+  });
+};
+
+const cargarFormulario = () => {
+  const { value: email } = Swal.fire({
+    title: "Input email address",
+    input: "email",
+    inputLabel: "Your email address",
+    inputPlaceholder: "Enter your email address",
+  });
+
+  if (email) {
+    Swal.fire(`Entered email: ${email}`);
+  }
+  modalCarrito.innerHTML = formulario;
+};
+
+const mostrarMensaje = () => {
+  const nombreCliente = document.getElementById("forName").value;
+  const emailCliente = document.getElementById("forEmail").value;
+  const direccionCliente = document.getElementById("forDirection").value;
+  modalCarrito.innerHTML = "";
+  let mensaje = `
+    <div class="text-center"> <h4>${nombreCliente}, gracias por confiar en AguStore. En 5 días hábiles tendrás tu compra en ${direccionCliente}.
+    Te enviamos la factura al mail ${emailCliente}</h4> </div>`;
+  modalCarrito.innerHTML = mensaje;
 };
