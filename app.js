@@ -82,6 +82,9 @@ const productos = [
   },
 ];
 
+//FALTA LOCALSTORAGE
+
+
 const dibujarProductos = () => {
   let contenedor = document.getElementById("container");
   productos.forEach((producto, index) => {
@@ -236,9 +239,11 @@ const mostrarMensaje = () => {
   const nombreCliente = document.getElementById("forName").value;
   const emailCliente = document.getElementById("forEmail").value;
   const direccionCliente = document.getElementById("forDirection").value;
+  
   modalCarrito.innerHTML = "";
   let mensaje = `
     <div class="text-center"> <h4>${nombreCliente}, gracias por confiar en AguStore. En 5 días hábiles tendrás tu compra en ${direccionCliente}.
     Te enviamos la factura al mail ${emailCliente}</h4> </div>`;
   modalCarrito.innerHTML = mensaje;
 };
+
