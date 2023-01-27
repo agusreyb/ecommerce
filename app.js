@@ -211,11 +211,11 @@ const cargarFormulario = () => {
     <div class="row">
       <div class="contact_secction_item">
         <label>Nombre</label>
-        <input type="text" id="nombre" placeholder="Nombre"/>
+        <input type="text" id="forName" placeholder="Nombre"/>
       </div>
       <div class="contact_secction_item">
         <label>Email</label>
-        <input type="text" id="mail" placeholder="E-mail"/>
+        <input type="text" id="forEmail" placeholder="E-mail"/>
       </div>
       <div class="contact_secction_item">
         <label>Teléfono</label>
@@ -223,16 +223,13 @@ const cargarFormulario = () => {
       </div>
       <div class="contact_secction_item">
         <label>Domicilio</label>
-        <input type="text" id="domicilio" placeholder="Domicilio"/>
-      </div>
-      <div class="contact-button">
-      <button href="#!" class="btn btn-primary" id="finalizar" onClick="mostrarMensaje()" >Finalizar Compra</button>
+        <input type="text" id="forDirection" placeholder="Domicilio"/>
       </div>
     </div>
+    <button class="btn btn-primary" onClick="mostrarMensaje()" >Enviar</button>
   </div>
-  `
+  `;
   modalCarrito.innerHTML = formulario;
-
 };
 
 const mostrarMensaje = () => {
