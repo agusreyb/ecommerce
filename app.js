@@ -100,3 +100,74 @@ const dibujarProductos = () => {
   });
 };
 dibujarProductos();
+
+// CREO EL CARRITO DONDE SE VAN A GUARDAR LOS PRODUCTOS
+let cart = [];
+
+const agregarAlCarrito = (index) => {
+  const indiceEncontradoCarrito = cart.findIndex((producto) => {
+    return producto.id === productos[index].id;
+    // SI ENCUENTRA ALGO LO GUARDA EN indiceEncontradoCarrito Y SINO DEVUELVE -1
+  });
+  if (indiceEncontradoCarrito === -1) {
+    Swal.fire(
+      'Producto agregado al carrito',
+      '',
+      'success'
+    )
+    // SI NO ENCUENTRA EL INDICE LO CREA
+    const agregarProducto = productos[index];
+    agregarProducto.cantidad = 1;
+    cart.push(agregarProducto);
+    dibujarCarrito();
+  } else {
+    Swal.fire(
+      'Producto agregado al carrito',
+      '',
+      'success'
+    )
+    //SI ENCUENTRA EL INDICE, LE AGREGA UNO
+    cart[indiceEncontradoCarrito].cantidad += 1;
+    dibujarCarrito();
+  }
+};
+
+let total = 0;
+//CAPTURO EL DIV DE CARRITO
+let modalCarrito = document.getElementById("cart");
+
+const dibujarCarrito = () => {
+  modalCarrito.className = "cart";
+  // VACIO PARA QUE CUANDO SE EJECUTE SE BORRE LO QUE ESTÁ Y LO VUELVA A DIBUJAR, ES ACTUALIZACIÓN
+  modalCarrito.innerHTML = "";
+  if (cart.length > 0) {
+    cart.forEach((producto, index) => {
+      total += producto.precio;
+      const carritoContainer = document.createElement("div");
+      carritoContainer.className = "producto-carrito";
+      carritoContainer.innerHTML = `
+        <img class="cart-img" src="${producto.img}" alt="Card image cap">
+        <div class="producto-details">${producto.nombre}</div>
+        <div class="producto-detail">
+          <button onClick="restarItem(${producto.id})" class="btn btn-secondary"><i class="fa-solid fa-minus"></i></button>
+          <span id='cantidad'>${producto.cantidad}</span>
+          <button onClick="sumarItem(${producto.id})" class="btn btn-success"><i class="fa-solid fa-plus"></i></button></div>
+          <div class="producto-detailt"> Precio: $ ${producto.precio}</div>
+          <div class="producto-detail"> Subtotal: $ ${
+            producto.precio * producto.cantidad
+          }</div>
+          <button href="#!" class="btn btn-primary" onClick="eliminarProducto(${index})" >Eliminar Producto</button>
+        `;
+      modalCarrito.appendChild(carritoContainer);
+    });
+    const totalContainer = document.createElement("div");
+    totalContainer.className = "total-carrito";
+    totalContainer.innerHTML = `
+        <div class="total">Total: $ ${total}</div>
+        <button href="#!" class="btn btn-primary" id="finalizar" onClick="finalizarCompra()" >Finalizar Compra</button>
+      `;
+    modalCarrito.appendChild(totalContainer);
+  } else {
+    modalCarrito.classList.remove("cart");
+  }
+};
