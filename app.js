@@ -170,18 +170,18 @@ const dibujarCarrito = () => {
 
 const eliminarProducto = (index) => {
   Swal.fire({
-    title: "¿Estás segurx que desea eliminar el producto?",
+    title: "¿Estás seguro que desea eliminar el producto?",
     text: "Luego podrá volverlo a agregar nuevamente",
     icon: "warning",
     showCancelButton: true,
     confirmButtonColor: "#3085d6",
     cancelButtonColor: "#d33",
-    confirmButtonText: "Sí, estoy segurx.",
+    confirmButtonText: "Sí, estoy seguro.",
   }).then((result) => {
     if (result.isConfirmed) {
       cart.splice(index, 1); //removeme de la posición index, 1 elemento
       dibujarCarrito();
-      Swal.fire("Deleted!", "Your file has been deleted.", "success");
+      Swal.fire("Producto eliminado!", "", "success");
     }
   });
 };
@@ -203,17 +203,36 @@ const finalizarCompra = () => {
 };
 
 const cargarFormulario = () => {
-  const { value: email } = Swal.fire({
-    title: "Input email address",
-    input: "email",
-    inputLabel: "Your email address",
-    inputPlaceholder: "Enter your email address",
-  });
-
-  if (email) {
-    Swal.fire(`Entered email: ${email}`);
-  }
+  // INGRESO DE NOMBRE
+  modalCarrito.innerHTML="";
+  const formulario = `
+  <h2>DATOS PARA EL ENVÍO</h2>
+  <div class="contact__secction-container">
+    <div class="row">
+      <div class="contact_secction_item">
+        <label>Nombre</label>
+        <input type="text" id="nombre" placeholder="Nombre"/>
+      </div>
+      <div class="contact_secction_item">
+        <label>Email</label>
+        <input type="text" id="mail" placeholder="E-mail"/>
+      </div>
+      <div class="contact_secction_item">
+        <label>Teléfono</label>
+        <input type="text" id="telefono" placeholder="Teléfono"/>
+      </div>
+      <div class="contact_secction_item">
+        <label>Domicilio</label>
+        <input type="text" id="domicilio" placeholder="Domicilio"/>
+      </div>
+      <div class="contact-button">
+      <button href="#!" class="btn btn-primary" id="finalizar" onClick="mostrarMensaje()" >Finalizar Compra</button>
+      </div>
+    </div>
+  </div>
+  `
   modalCarrito.innerHTML = formulario;
+
 };
 
 const mostrarMensaje = () => {

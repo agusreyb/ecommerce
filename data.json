@@ -1,0 +1,27 @@
+[
+    {
+      "id": 1,
+      "nombre": "Correas Trapeciales Clásicas",
+      "precio": 1500,
+      "img": "../assets/img/clasicas.jpg"
+    },
+    {
+      "id": 2,
+      "nombre": "Correas Trapeciales Dentadas",
+      "precio": 500,
+      "img": "../assets/img/dentadas.jpg"
+    },
+    {
+      "id": 3,
+      "nombre": "Correas Automotor",
+      "precio": 1000,
+      "img": "../assets/img/automotor.jpg"
+    },
+    {
+      "id": 4,
+      "nombre": "Correas Trapeciales Estrechas",
+      "precio": 2000,
+      "img": "../assets/img/estrechas.jpg"
+    }
+  ]
+  
