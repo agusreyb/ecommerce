@@ -171,3 +171,44 @@ const dibujarCarrito = () => {
     modalCarrito.classList.remove("cart");
   }
 };
+
+
+const eliminarProducto = (index) => {
+  Swal.fire({
+    title: '¿Estás segurx que desea eliminar el producto?',
+    text: "Luego podrá volverlo a agregar nuevamente",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Sí, estoy segurx.'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      cart.splice(index, 1);  //removeme de la posición index, 1 elemento
+      dibujarCarrito();
+      Swal.fire(
+        'Deleted!',
+        'Your file has been deleted.',
+        'success'
+      )
+    }
+  })
+
+};
+
+
+const finalizarCompra = () => {
+  Swal.fire({
+title: '¿Desea seguir comprando o ir a pagar?',
+icon: 'warning',
+showCancelButton: true,
+confirmButtonColor: '#3085d6',
+cancelButtonColor: '#d33',
+confirmButtonText: 'Ir a pagar',
+cancelButtonText: 'Seguir Comprando'
+}).then((result) => {
+if (result.isConfirmed) {
+  cargarFormulario();
+}
+})
+};
