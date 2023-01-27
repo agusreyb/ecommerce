@@ -100,3 +100,145 @@ const dibujarProductos = () => {
   });
 };
 dibujarProductos();
+
+// CREO EL CARRITO DONDE SE VAN A GUARDAR LOS PRODUCTOS
+let cart = [];
+
+const agregarAlCarrito = (index) => {
+  const indiceEncontradoCarrito = cart.findIndex((producto) => {
+    return producto.id === productos[index].id;
+    // SI ENCUENTRA ALGO LO GUARDA EN indiceEncontradoCarrito Y SINO DEVUELVE -1
+  });
+  if (indiceEncontradoCarrito === -1) {
+    Swal.fire("Producto agregado al carrito", "", "success");
+    // SI NO ENCUENTRA EL INDICE LO CREA
+    const agregarProducto = productos[index];
+    agregarProducto.cantidad = 1;
+    cart.push(agregarProducto);
+    dibujarCarrito();
+  } else {
+    Swal.fire("Producto agregado al carrito", "", "success");
+    //SI ENCUENTRA EL INDICE, LE AGREGA UNO
+    cart[indiceEncontradoCarrito].cantidad += 1;
+    dibujarCarrito();
+  }
+};
+
+let total = 0;
+//CAPTURO EL DIV DE CARRITO
+let modalCarrito = document.getElementById("cart");
+
+const dibujarCarrito = () => {
+  modalCarrito.className = "cart";
+  // VACIO PARA QUE CUANDO SE EJECUTE SE BORRE LO QUE ESTÁ Y LO VUELVA A DIBUJAR, ES ACTUALIZACIÓN
+  modalCarrito.innerHTML = "";
+  if (cart.length > 0) {
+    cart.forEach((producto, index) => {
+      total += producto.precio;
+      const carritoContainer = document.createElement("div");
+      carritoContainer.className = "producto-carrito";
+      carritoContainer.innerHTML = `
+        <img class="cart-img" src="${producto.img}" alt="Card image cap">
+        <div class="producto-details">${producto.nombre}</div>
+        <div class="producto-detail">
+          <button onClick="restarItem(${
+            producto.id
+          })" class="btn btn-secondary"><i class="fa-solid fa-minus"></i></button>
+          <span id='cantidad'>${producto.cantidad}</span>
+          <button onClick="sumarItem(${
+            producto.id
+          })" class="btn btn-success"><i class="fa-solid fa-plus"></i></button></div>
+          <div class="producto-detailt"> Precio: $ ${producto.precio}</div>
+          <div class="producto-detail"> Subtotal: $ ${
+            producto.precio * producto.cantidad
+          }</div>
+          <button href="#!" class="btn btn-primary" onClick="eliminarProducto(${index})" >Eliminar Producto</button>
+        `;
+      modalCarrito.appendChild(carritoContainer);
+    });
+    const totalContainer = document.createElement("div");
+    totalContainer.className = "total-carrito";
+    totalContainer.innerHTML = `
+        <div class="total">Total: $ ${total}</div>
+        <button href="#!" class="btn btn-primary" id="finalizar" onClick="finalizarCompra()" >Finalizar Compra</button>
+      `;
+    modalCarrito.appendChild(totalContainer);
+  } else {
+    modalCarrito.classList.remove("cart");
+  }
+};
+
+const eliminarProducto = (index) => {
+  Swal.fire({
+    title: "¿Estás seguro que desea eliminar el producto?",
+    text: "Luego podrá volverlo a agregar nuevamente",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Sí, estoy seguro.",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      cart.splice(index, 1); //removeme de la posición index, 1 elemento
+      dibujarCarrito();
+      Swal.fire("Producto eliminado!", "", "success");
+    }
+  });
+};
+
+const finalizarCompra = () => {
+  Swal.fire({
+    title: "¿Desea seguir comprando o ir a pagar?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Ir a pagar",
+    cancelButtonText: "Seguir Comprando",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      cargarFormulario();
+    }
+  });
+};
+
+const cargarFormulario = () => {
+  // INGRESO DE NOMBRE
+  modalCarrito.innerHTML="";
+  const formulario = `
+  <h2>DATOS PARA EL ENVÍO</h2>
+  <div class="contact__secction-container">
+    <div class="row">
+      <div class="contact_secction_item">
+        <label>Nombre</label>
+        <input type="text" id="forName" placeholder="Nombre"/>
+      </div>
+      <div class="contact_secction_item">
+        <label>Email</label>
+        <input type="text" id="forEmail" placeholder="E-mail"/>
+      </div>
+      <div class="contact_secction_item">
+        <label>Teléfono</label>
+        <input type="text" id="telefono" placeholder="Teléfono"/>
+      </div>
+      <div class="contact_secction_item">
+        <label>Domicilio</label>
+        <input type="text" id="forDirection" placeholder="Domicilio"/>
+      </div>
+    </div>
+    <button class="btn btn-primary" onClick="mostrarMensaje()" >Enviar</button>
+  </div>
+  `;
+  modalCarrito.innerHTML = formulario;
+};
+
+const mostrarMensaje = () => {
+  const nombreCliente = document.getElementById("forName").value;
+  const emailCliente = document.getElementById("forEmail").value;
+  const direccionCliente = document.getElementById("forDirection").value;
+  modalCarrito.innerHTML = "";
+  let mensaje = `
+    <div class="text-center"> <h4>${nombreCliente}, gracias por confiar en AguStore. En 5 días hábiles tendrás tu compra en ${direccionCliente}.
+    Te enviamos la factura al mail ${emailCliente}</h4> </div>`;
+  modalCarrito.innerHTML = mensaje;
+};
