@@ -43,12 +43,6 @@ const dibujoNavBar = () => {
               Search
             </button>
           </form>
-          <button id="boton-carrito" class="btn btn-success float-right mx-2" onClick="dibujarCarrito()">
-              <i class="fas fa-shopping-cart"></i>
-              <span id="contadorCarrito">0</span>
-              <br/>
-              Subtotal $<span id="subtotal">0</span>
-          </button>
         </div>
       </div>`;
   contenedor.appendChild(navbar);
@@ -84,7 +78,7 @@ const productos = [
 
 //FALTA LOCALSTORAGE
 
-
+//MODIFICAR Y TRAERLOS CON FETCH
 const dibujarProductos = () => {
   let contenedor = document.getElementById("container");
   productos.forEach((producto, index) => {
@@ -105,7 +99,7 @@ const dibujarProductos = () => {
 dibujarProductos();
 
 // CREO EL CARRITO DONDE SE VAN A GUARDAR LOS PRODUCTOS
-let cart = [];
+let cart = JSON.parse(localStorage.getItem("carrito")) || [];
 
 const agregarAlCarrito = (index) => {
   const indiceEncontradoCarrito = cart.findIndex((producto) => {
@@ -119,11 +113,13 @@ const agregarAlCarrito = (index) => {
     agregarProducto.cantidad = 1;
     cart.push(agregarProducto);
     dibujarCarrito();
+    guardarLocal();
   } else {
     Swal.fire("Producto agregado al carrito", "", "success");
     //SI ENCUENTRA EL INDICE, LE AGREGA UNO
     cart[indiceEncontradoCarrito].cantidad += 1;
     dibujarCarrito();
+    guardarLocal();
   }
 };
 
@@ -137,7 +133,7 @@ const dibujarCarrito = () => {
   modalCarrito.innerHTML = "";
   if (cart.length > 0) {
     cart.forEach((producto, index) => {
-      total += producto.precio;
+      total += producto.precio * producto.cantidad;
       const carritoContainer = document.createElement("div");
       carritoContainer.className = "producto-carrito";
       carritoContainer.innerHTML = `
@@ -162,14 +158,30 @@ const dibujarCarrito = () => {
     const totalContainer = document.createElement("div");
     totalContainer.className = "total-carrito";
     totalContainer.innerHTML = `
-        <div class="total">Total: $ ${total}</div>
+        <div>
+        <h2 class="text-center">Total: $ ${total}</h2>
+        <button href="#!" class="btn btn-primary" id="finalizar" onClick="vaciarCarrito()" >Vaciar Carrito</button>
         <button href="#!" class="btn btn-primary" id="finalizar" onClick="finalizarCompra()" >Finalizar Compra</button>
+        </div>
       `;
     modalCarrito.appendChild(totalContainer);
   } else {
     modalCarrito.classList.remove("cart");
   }
 };
+
+const sumarItem = (prodId) =>{
+  const item = cart.find((prod) => prod.id === prodId);
+  item.cantidad++;
+  dibujarCarrito();
+}
+
+const restarItem = (prodId) => {
+  const item = cart.find((prod) => prod.id === prodId);
+  if(item.cantidad > 1){
+  item.cantidad--;
+  dibujarCarrito();}
+}
 
 const eliminarProducto = (index) => {
   Swal.fire({
@@ -189,6 +201,26 @@ const eliminarProducto = (index) => {
   });
 };
 
+const vaciarCarrito = () => {
+  Swal.fire({
+    title: "¿Estas seguro?",
+    text: "Estas a punto de vaciar el carrito.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Borrar",
+    cancelButtonText: "Cancelar",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Swal.fire("¡Listo!", "Tu carrito esta vacio.", "success");
+      cart.length = 0;
+      localStorage.removeItem("cart");
+      dibujarCarrito();
+    }
+    dibujarCarrito();
+  });
+};
 const finalizarCompra = () => {
   Swal.fire({
     title: "¿Desea seguir comprando o ir a pagar?",
@@ -207,7 +239,7 @@ const finalizarCompra = () => {
 
 const cargarFormulario = () => {
   // INGRESO DE NOMBRE
-  modalCarrito.innerHTML="";
+  modalCarrito.innerHTML = "";
   const formulario = `
   <h2>DATOS PARA EL ENVÍO</h2>
   <div class="contact__secction-container">
@@ -239,7 +271,7 @@ const mostrarMensaje = () => {
   const nombreCliente = document.getElementById("forName").value;
   const emailCliente = document.getElementById("forEmail").value;
   const direccionCliente = document.getElementById("forDirection").value;
-  
+
   modalCarrito.innerHTML = "";
   let mensaje = `
     <div class="text-center"> <h4>${nombreCliente}, gracias por confiar en AguStore. En 5 días hábiles tendrás tu compra en ${direccionCliente}.
@@ -247,3 +279,30 @@ const mostrarMensaje = () => {
   modalCarrito.innerHTML = mensaje;
 };
 
+/* //PROBANDO APPI
+
+let listado = document.getElementById("listado")
+fetch("/data.json")
+  .then((res)=>res.json())
+  .then((data)=>{
+    data.forEach((post,index)=>{
+      const card = document.createElement("div")
+      card.classList.add("card", "col-sm-12", "col-lg-3", "m-2");
+      card.innerHTML=`
+      <img class="card-img-top" src="${post.img}" alt="Card image cap">
+      <div class="card-body">
+        <h4 class="card-title">${post.nombre}</h4>
+        <p class="card-text">$ ${post.precio}</p>
+        <a href="#!" class="btn btn-primary" onClick="agregarAlCarrito(${index})" >Agregar al Carrito</a>
+      </div>
+      `
+      listado.append(card);
+    })
+  })
+
+
+  //PRUEBA LOCALSTORE
+  const guardarLocal = () =>{
+    localStorage.setItem("Carrito",JSON.stringify(cart));
+  }
+ */
